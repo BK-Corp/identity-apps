@@ -72,6 +72,10 @@ export const PreLoader: FunctionComponent<PreLoaderPropsInterface> = (
         error: brandingError
     } = useGetBrandingPreference(AppConstants.getTenant());
 
+    const brandedLogo: string | undefined = brandingPreference?.preference?.theme?.[
+        brandingPreference?.preference?.theme?.activeTheme
+    ]?.images?.myAccountLogo?.imgURL;
+
     const getDefaultLogo = (): string => {
         return resolveAppLogoFilePath(
             brandingPreference?.preference?.theme?.activeTheme === PredefinedThemes.DARK
@@ -95,7 +99,8 @@ export const PreLoader: FunctionComponent<PreLoaderPropsInterface> = (
     return (
         <div className="pre-loader-wrapper" data-testid={ `${ componentId }-wrapper` }>
             {
-                AppConstants.getTenant() === AppConstants.getSuperTenant() && !commonConfig?.enableDefaultPreLoader ? (
+                AppConstants.getTenant() === AppConstants.getSuperTenant() && !commonConfig?.enableDefaultPreLoader
+                && !brandedLogo ? (
                     <PulseLoader data-testid={ componentId }>
                         <Pulse data-testid={ `${ componentId }-svg` } />
                     </PulseLoader>
