@@ -26,14 +26,14 @@ export const roles: rolesNS = {
     addRoleWizard: {
         agents: {
             assignAgentModal: {
-                heading: "Gán agent",
-                hint: "Chọn agent để gán vào vai trò",
+                heading: "Gán tác nhân",
+                hint: "Chọn tác nhân để gán vào vai trò",
                 list: {
                     listHeader: "Tên",
-                    searchPlaceholder: "Tìm agent"
+                    searchPlaceholder: "Tìm tác nhân"
                 },
-                search: "Tìm agent theo tên hoặc ID",
-                subHeading: "Gán agent mới vào vai trò."
+                search: "Tìm tác nhân theo tên hoặc ID",
+                subHeading: "Gán tác nhân mới vào vai trò."
             }
         },
         back: "Quay lại",
@@ -199,70 +199,70 @@ export const roles: rolesNS = {
         agents: {
             actions: {
                 assign: {
-                    placeholder: "Nhập tên đăng nhập để tìm và gán agent"
+                    placeholder: "Nhập tên đăng nhập để tìm và gán tác nhân"
                 },
                 remove: {
-                    label: "Đang gỡ agent",
-                    placeholder: "Khôi phục agent"
+                    label: "Đang gỡ tác nhân",
+                    placeholder: "Khôi phục tác nhân"
                 },
                 search: {
-                    moreItemsMessage: "Chỉ liệt kê các agent gần đây. Nhập để tìm agent khác...",
-                    placeholder: "Tìm agent"
+                    moreItemsMessage: "Chỉ liệt kê các tác nhân gần đây. Nhập để tìm tác nhân khác...",
+                    placeholder: "Tìm tác nhân"
                 }
             },
-            heading: "Agent đã gán",
+            heading: "Tác nhân đã gán",
             list: {
                 emptyPlaceholder: {
-                    action: "Gán agent",
-                    subtitles: "Hiện chưa có agent nào được gán cho {{type}}.",
-                    title: "Chưa gán agent"
+                    action: "Gán tác nhân",
+                    subtitles: "Hiện chưa có tác nhân nào được gán cho {{type}}.",
+                    title: "Chưa gán tác nhân"
                 },
                 organization: "Quản lý bởi",
-                user: "Agent"
+                user: "Tác nhân"
             },
             notifications: {
                 error: {
                     description: "{{description}}",
-                    message: "Đã xảy ra lỗi khi cập nhật agent được gán cho vai trò."
+                    message: "Đã xảy ra lỗi khi cập nhật tác nhân được gán cho vai trò."
                 },
                 fetchError: {
-                    description: "Không thể tải các agent được gán cho vai trò.",
+                    description: "Không thể tải các tác nhân được gán cho vai trò.",
                     message: "Đã xảy ra lỗi"
                 },
                 genericError: {
-                    description: "Không thể cập nhật các agent được gán cho vai trò.",
+                    description: "Không thể cập nhật các tác nhân được gán cho vai trò.",
                     message: "Đã xảy ra lỗi"
                 },
                 pendingApproval: {
-                    description: "Yêu cầu cập nhật gán agent đã được chấp nhận và đang chờ phê duyệt.",
-                    message: "Đã chấp nhận gán agent, chờ phê duyệt"
+                    description: "Yêu cầu cập nhật gán tác nhân đã được chấp nhận và đang chờ phê duyệt.",
+                    message: "Đã chấp nhận gán tác nhân, chờ phê duyệt"
                 },
                 success: {
-                    description: "Đã cập nhật các agent được gán cho vai trò.",
+                    description: "Đã cập nhật các tác nhân được gán cho vai trò.",
                     message: "Cập nhật vai trò thành công"
                 }
             },
             placeholders: {
-                beginSearch: "Để bắt đầu, hãy tìm agent bằng cách nhập tên hoặc ID. Có thể bạn cần nhập đầy đủ tên hoặc ID.",
+                beginSearch: "Để bắt đầu, hãy tìm tác nhân bằng cách nhập tên hoặc ID. Có thể bạn cần nhập đầy đủ tên hoặc ID.",
                 emptyPlaceholder: {
-                    action: "Gán agent",
+                    action: "Gán tác nhân",
                     subtitles: {
-                        0: "Hiện chưa có agent nào được gán cho vai trò này."
+                        0: "Hiện chưa có tác nhân nào được gán cho vai trò này."
                     },
-                    title: "Chưa có agent nào được gán cho vai trò."
+                    title: "Chưa có tác nhân nào được gán cho vai trò."
                 },
                 emptySearchResult: "Không tìm thấy kết quả. Vui lòng thử với tên hoặc ID đầy đủ.",
-                error: "Đã xảy ra lỗi khi tải danh sách agent.",
+                error: "Đã xảy ra lỗi khi tải danh sách tác nhân.",
                 errorPlaceholder: {
                     action: "Làm mới",
                     subtitles: {
-                        0: "Đã xảy ra lỗi khi tải các agent được gán cho vai trò này.",
+                        0: "Đã xảy ra lỗi khi tải các tác nhân được gán cho vai trò này.",
                         1: "Vui lòng thử lại."
                     },
                     title: "Đã xảy ra lỗi"
                 }
             },
-            subHeading: "Thêm hoặc gỡ các agent được gán cho vai trò này; lưu ý điều này sẽ ảnh hưởng đến một số tác vụ."
+            subHeading: "Thêm hoặc gỡ các tác nhân được gán cho vai trò này; lưu ý điều này sẽ ảnh hưởng đến một số tác vụ."
         },
         basics: {
             buttons: {
@@ -346,7 +346,7 @@ export const roles: rolesNS = {
             subHeading: "Thêm hoặc gỡ các nhóm được gán cho vai trò này; lưu ý điều này sẽ ảnh hưởng đến một số tác vụ."
         },
         menuItems: {
-            agents: "Agent",
+            agents: "Tác nhân",
             basic: "Cơ bản",
             connectedApps: "Ứng dụng liên kết",
             groups: "Nhóm",

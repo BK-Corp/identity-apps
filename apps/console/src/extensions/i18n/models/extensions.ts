@@ -2345,6 +2345,7 @@ export interface Extensions {
             eventPublishing: string;
             emailTemplates: string;
             emailAndSms: string;
+            resources: string;
             home: string;
             organizationInfo: string;
         };

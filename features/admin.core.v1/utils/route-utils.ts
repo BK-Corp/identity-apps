@@ -283,42 +283,42 @@ export class RouteUtils {
         const userManagement: Omit<RouteInterface, "showOnSidePanel"> = {
             icon: SquareUserIcon,
             id: "userManagement",
-            name: "User Management",
+            name: "console:common.sidePanel.userManagement",
             order: 1
         };
 
         const userAttributesAndStores: Omit<RouteInterface, "showOnSidePanel"> = {
             icon: DatabaseDocumentIcon,
             id: "userAttributesAndStores",
-            name: "User Attributes & Stores",
+            name: "console:common.sidePanel.userAttributesAndStores",
             order: 2
         };
 
         const workflows: Omit<RouteInterface, "showOnSidePanel"> = {
             icon: UserFlowIcon,
             id: "workflows",
-            name: "Workflows",
+            name: "extensions:manage.sidePanel.categories.workflows",
             order: 3
         };
 
         const resourceServers: Omit<RouteInterface, "showOnSidePanel"> = {
             icon: ResourceServersIcon,
             id: "resourceServers",
-            name: "Resources",
+            name: "extensions:develop.sidePanel.resources",
             order: 2
         };
 
         const customerData: Omit<RouteInterface, "showOnSidePanel"> = {
             icon: CustomerDataIcon,
             id: "customerDataService",
-            name: "Customer Data",
+            name: "extensions:manage.sidePanel.categories.customerDataService",
             order: 8
         };
 
         const branding: Omit<RouteInterface, "showOnSidePanel"> = {
             icon: PaletteIcon,
             id: "customization",
-            name: "Branding"
+            name: "extensions:develop.sidePanel.categories.branding"
         };
 
         const overview: NavCategory = {
@@ -354,7 +354,7 @@ export class RouteUtils {
         const digitalCredentials: Omit<RouteInterface, "showOnSidePanel"> = {
             icon: VerifiableCredentialsOutlineIcon,
             id: "digitalCredentials",
-            name: "Verifiable Credentials",
+            name: "extensions:manage.sidePanel.categories.verifiableCredentials",
             order: 3
         };
 

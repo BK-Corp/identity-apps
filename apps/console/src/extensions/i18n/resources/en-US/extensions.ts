@@ -2482,6 +2482,7 @@ export const extensions: Extensions = {
         sidePanel: {
             apiResources: "API Resources",
             emailAndSms: "Email & SMS",
+            resources: "Resources",
             home: "Home",
             mcpServers: "MCP Servers",
             consents: "Consents",

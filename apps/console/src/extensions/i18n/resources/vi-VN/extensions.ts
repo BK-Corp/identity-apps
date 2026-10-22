@@ -2333,6 +2333,7 @@ export const extensions: Extensions = {
         sidePanel: {
             apiResources: "API Resource",
             emailAndSms: "Email & SMS",
+            resources: "Tài nguyên",
             home: "Trang chủ",
             mcpServers: "MCP Server",
             consents: "Sự đồng ý",

@@ -284,8 +284,8 @@ export const governanceConnectors: governanceConnectorsNS = {
                             piiPublishingWarning: "Bạn đã bật gửi cả hồ sơ người dùng và dữ liệu thiết bị (VD: email, tên, địa chỉ IP) lên Sift. Hãy đảm bảo điều này tuân thủ chính sách quyền riêng tư của tổ chức.",
                             publishDeviceMetadata: {
                                 label: "Đưa siêu dữ liệu thiết bị người dùng vào payload sự kiện",
-                                description: "Xuất bản siêu dữ liệu thiết bị như địa chỉ IP và user agent.",
-                                warning: "Thao tác này sẽ gửi địa chỉ IP và user agent, có thể được coi là dữ liệu cá nhân. Hãy đảm bảo tuân thủ chính sách quyền riêng tư và thỏa thuận chia sẻ dữ liệu của tổ chức."
+                                description: "Xuất bản siêu dữ liệu thiết bị như địa chỉ IP và user tác nhân.",
+                                warning: "Thao tác này sẽ gửi địa chỉ IP và user tác nhân, có thể được coi là dữ liệu cá nhân. Hãy đảm bảo tuân thủ chính sách quyền riêng tư và thỏa thuận chia sẻ dữ liệu của tổ chức."
                             },
                             publishUserInfo: {
                                 label: "Đưa thông tin hồ sơ người dùng vào payload sự kiện",

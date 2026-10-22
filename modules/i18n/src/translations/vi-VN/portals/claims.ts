@@ -23,8 +23,8 @@ import { ClaimsNS } from "../../../models";
 export const claims: ClaimsNS = {
     attributeMappings: {
         agent: {
-            description: "Biểu diễn theo giao thức SCIM cho thuộc tính AI agent, dùng trong các API quản lý danh tính agent.",
-            heading: "SCIM 2.0 cho AI Agent"
+            description: "Biểu diễn theo giao thức SCIM cho thuộc tính tác nhân AI, dùng trong các API quản lý danh tính tác nhân.",
+            heading: "SCIM 2.0 cho Tác nhân AI"
         },
         axschema: {
             description: "Biểu diễn Attribute Exchange Schema (axschema) cho thuộc tính người dùng.",
@@ -185,8 +185,8 @@ export const claims: ClaimsNS = {
         sections: {
             manageAttributeMappings: {
                 agent: {
-                    description: "Biểu diễn theo giao thức SCIM cho thuộc tính AI agent, dùng trong các API quản lý danh tính agent.",
-                    heading: "SCIM 2.0 cho AI Agent"
+                    description: "Biểu diễn theo giao thức SCIM cho thuộc tính tác nhân AI, dùng trong các API quản lý danh tính tác nhân.",
+                    heading: "SCIM 2.0 cho Tác nhân AI"
                 },
                 custom: {
                     description: "Truyền thông tin về người dùng qua các ánh xạ tùy chỉnh.",

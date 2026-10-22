@@ -217,7 +217,7 @@ export const remoteUserStores: RemoteUserStoresNS = {
                             verification: {
                                 description: "Làm theo các bước dưới đây để xác minh tệp đã tải bằng checksum SHA256.",
                                 heading: "Xác minh tệp đã tải",
-                                step1: "Chạy lệnh sau trong dòng lệnh. Thay <1>FILE_PATH</1> bằng đường dẫn tệp zip của agent đã tải.",
+                                step1: "Chạy lệnh sau trong dòng lệnh. Thay <1>FILE_PATH</1> bằng đường dẫn tệp zip của tác nhân đã tải.",
                                 step2: "So sánh checksum được tạo với giá trị bên dưới."
                             }
                         }

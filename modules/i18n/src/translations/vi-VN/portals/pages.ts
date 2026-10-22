@@ -35,8 +35,8 @@ export const pages: pagesNS = {
         title: "Thêm mẫu mới"
     },
     agents: {
-        subTitle: "Cấu hình và quản lý danh tính AI agent cho tổ chức của bạn",
-        title: "Agent"
+        subTitle: "Cấu hình và quản lý danh tính tác nhân AI cho tổ chức của bạn",
+        title: "Tác nhân"
     },
     approvalWorkflows: {
         subTitle: "Tạo và quản lý quy trình phê duyệt.",
