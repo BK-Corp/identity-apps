@@ -292,7 +292,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
         },
         {
             component: lazy(() =>
-                import("@wso2is/admin.home.v1/pages/home-page")),
+                import("@wso2is/admin.home.v1/pages/activity-page")),
             exact: false,
             icon: {
                 icon: getSidePanelIcons().home
