@@ -418,11 +418,12 @@ export const Header: FunctionComponent<HeaderPropsInterface> = (
                     [muiTheme.breakpoints.up("sm")]: {
                         height: "40px",
                         maxWidth: "unset",
-                        width: "216px"
+                        width: "auto"
                     },
                     img : {
                         [muiTheme.breakpoints.up("sm")]: {
-                            width: "216px"
+                            height: "40px",
+                            width: "auto"
                         }
                     }
                 }

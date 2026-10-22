@@ -246,7 +246,7 @@ export const LegacyProfile: FunctionComponent<LegacyProfileProps> = (props: Lega
                             { description: error.response.data.detail }
                         ),
                         level: AlertLevels.ERROR,
-                        message: t("myAccount:sections.verificationOnUpdate.preference.notifications..error.message")
+                        message: t("myAccount:sections.verificationOnUpdate.preference.notifications.error.message")
                     });
 
                     return;
