@@ -28,6 +28,7 @@ import useSignIn from "@wso2is/admin.authentication.v1/hooks/use-sign-in";
 import { PreLoader } from "@wso2is/admin.core.v1/components/pre-loader";
 import { Config } from "@wso2is/admin.core.v1/configs/app";
 import { AppConstants } from "@wso2is/admin.core.v1/constants/app-constants";
+import { I18nConstants } from "@wso2is/admin.core.v1/constants/i18n-constants";
 import { MultitenantConstants } from "@wso2is/admin.core.v1/constants/multitenant-constants";
 import { history } from "@wso2is/admin.core.v1/helpers/history";
 import useUIConfig from "@wso2is/admin.core.v1/hooks/use-ui-configs";
@@ -389,9 +390,9 @@ export const ProtectedApp: FunctionComponent<AppPropsInterface> = (): ReactEleme
 
                 if (!isSupported) {
                     try {
-                        await I18n.instance.changeLanguage(I18nModuleConstants.DEFAULT_FALLBACK_LANGUAGE);
+                        await I18n.instance.changeLanguage(I18nConstants.DEFAULT_LANGUAGE);
                     } catch (error) {
-                        throw new LanguageChangeException(I18nModuleConstants.DEFAULT_FALLBACK_LANGUAGE, error);
+                        throw new LanguageChangeException(I18nConstants.DEFAULT_LANGUAGE, error);
                     }
                 }
             } catch (error) {

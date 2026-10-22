@@ -1558,7 +1558,7 @@ TODO : Move values to separate variables and cleanup styles.
 
     .scroll-container {
         height: calc(100vh - 450px);
-        font-family: "Gilmer";
+        font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
         font-style: normal;
         font-weight: 400;
         font-size: 13px;
@@ -1664,7 +1664,7 @@ TODO : Move values to separate variables and cleanup styles.
         align-content: center;
 
         .advance-search-form {
-            font-family: "Gilmer, sans-serif";
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
             width: 60%;
 
             .search-input-wrapper {

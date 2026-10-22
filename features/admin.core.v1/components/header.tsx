@@ -312,7 +312,40 @@ const Header: FunctionComponent<HeaderPropsInterface> = ({
         setLanguageSwitcherAnchorEl(e.currentTarget);
     };
 
+    // LGSP: support link published by the branding API (`urls.supportURL`); only http(s) targets are rendered.
+    const [ supportUrl, setSupportUrl ] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        const endpoint: string = config?.endpoints?.brandingPreference;
+
+        if (!endpoint) {
+            return;
+        }
+
+        fetch(`${ endpoint }/resolve?type=ORG&name=${ encodeURIComponent(config?.deployment?.tenant ?? "carbon.super") }`)
+            .then((response: Response) => response.ok ? response.json() : undefined)
+            .then((data: { preference?: { urls?: { supportURL?: string } } }) => {
+                const url: string = data?.preference?.urls?.supportURL ?? "";
+
+                setSupportUrl(/^https?:\/\//.test(url) ? url : undefined);
+            })
+            .catch(() => setSupportUrl(undefined));
+    }, [ config?.endpoints?.brandingPreference ]);
+
     const generateHeaderButtons = (): ReactElement[] => [
+        supportUrl && (
+            <Button
+                component="a"
+                color="inherit"
+                href={ supportUrl }
+                target="_blank"
+                rel="noreferrer"
+                key="support"
+                data-componentid="app-header-support-link"
+            >
+                { I18n.instance?.language?.startsWith("vi") ? "Hỗ trợ" : "Support" }
+            </Button>
+        ),
         showLanguageSwitcher && Object.entries(filteredSupportedI18nLanguages)?.length > 1 && (
             <>
                 <Button
@@ -628,6 +661,21 @@ const Header: FunctionComponent<HeaderPropsInterface> = ({
         <>
             <OxygenHeader
                 className={ isSAASDeployment ? "is-header saas-header" : "is-header" }
+                sx={ (muiTheme: Theme) => ({
+                    "&&.is-header.oxygen-header .oxygen-brand-logo": {
+                        [muiTheme.breakpoints.up("sm")]: {
+                            height: "40px",
+                            maxWidth: "unset",
+                            width: "auto"
+                        },
+                        img: {
+                            [muiTheme.breakpoints.up("sm")]: {
+                                height: "40px",
+                                width: "auto"
+                            }
+                        }
+                    }
+                }) }
                 brand={ {
                     logo: {
                         desktop: <LogoImage />,

@@ -463,6 +463,11 @@ export class I18nConstants {
     public static readonly XHR_BACKEND_PLUGIN_ENABLED: boolean = true;
 
     /**
+     * Default language of the portal (LGSP). Missing keys fall back to the default fallback language.
+     */
+    public static readonly DEFAULT_LANGUAGE: string = "vi-VN";
+
+    /**
      * Default fallback language.
      */
     public static readonly DEFAULT_FALLBACK_LANGUAGE: string = I18nModuleConstants.DEFAULT_FALLBACK_LANGUAGE;

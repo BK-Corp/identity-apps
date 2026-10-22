@@ -85,6 +85,7 @@ import { StaticContext } from "react-router";
 import { Redirect, Route, RouteComponentProps, Router, Switch } from "react-router-dom";
 import { Dispatch } from "redux";
 import "dayjs/locale/si";
+import "dayjs/locale/vi";
 import "dayjs/locale/fr";
 import { getBaseRoutes } from "./configs/routes";
 import DecoratedApp from "./decorated-app";

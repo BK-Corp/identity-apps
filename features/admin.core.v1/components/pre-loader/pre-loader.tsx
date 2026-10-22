@@ -19,16 +19,22 @@
 import { Theme, styled } from "@mui/material/styles";
 import Box from "@oxygen-ui/react/Box";
 import { commonConfig } from "@wso2is/admin.extensions.v1";
+import { resolveAppLogoFilePath } from "@wso2is/core/helpers";
 import { IdentifiableComponentInterface } from "@wso2is/core/models";
+import { StringUtils } from "@wso2is/core/utils";
 import { ContentLoader } from "@wso2is/react-components";
 import React, { FunctionComponent, ReactElement } from "react";
 import { ReactComponent as Pulse } from "./pulse.svg";
 
 const PulseLoader: typeof Box = styled(Box)(({ theme }: { theme: Theme }) => ({
-    "& svg": {
+    "& img, & svg": {
         animation: "app-pre-loader-pulse 2s ease-in-out infinite",
         height: theme.spacing(10),
         width: theme.spacing(10)
+    },
+    "& img": {
+        height: "48px",
+        width: "auto"
     },
     "@keyframes app-pre-loader-pulse": {
         "0%, 100%": { opacity: 1 },
@@ -59,9 +65,24 @@ export const PreLoader: FunctionComponent<PreLoaderPropsInterface> = (
         ["data-componentid"]: componentId
     } = props;
 
+    // LGSP: show the configured brand logo (same source as the header) instead of the pulse icon.
+    const appConfig: Record<string, any> = window[ "AppUtils" ]?.getConfig?.();
+    const logoPath: string | undefined = appConfig?.ui?.appLogo?.defaultLogoPath ?? appConfig?.ui?.appLogoPath;
+    const appBase: string = StringUtils.removeSlashesFromPath(appConfig?.appBaseWithProxy ?? "");
+    const logo: string | undefined = logoPath && appConfig?.ui?.theme?.name
+        ? resolveAppLogoFilePath(
+            logoPath,
+            `${ appConfig.clientOrigin }/${ appBase !== "" ? appBase + "/" : "" }libs/themes/${ appConfig.ui.theme.name }`
+        )
+        : undefined;
+
     return (
         <div className="pre-loader-wrapper" data-componentid={ `${componentId}-wrapper` }>
-            { commonConfig?.enableDefaultPreLoader ? (
+            { logo ? (
+                <PulseLoader data-componentid={ componentId }>
+                    <img src={ logo } alt="logo" style={ { height: "48px", width: "auto" } } />
+                </PulseLoader>
+            ) : commonConfig?.enableDefaultPreLoader ? (
                 <ContentLoader data-componentid={ componentId } />
             ) : (
                 <PulseLoader data-componentid={ componentId }>

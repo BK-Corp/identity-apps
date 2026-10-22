@@ -269,6 +269,11 @@ export class Config {
                     metaFile
                 )
             },
+            detection: {
+                // Respect explicit choices; browser language must not override the portal default.
+                order: [ "querystring", "localStorage", "cookie" ]
+            },
+            fallbackLng: [ I18nConstants.DEFAULT_LANGUAGE, I18nConstants.DEFAULT_FALLBACK_LANGUAGE ],
             load: "currentOnly", // lookup only current lang key(en-US). Prevents 404 from `en`.
             ns: [
                 I18nConstants.APPLICATION_ROLES_NAMESPACE,
@@ -430,13 +435,13 @@ export class Config {
 
     /**
      * Get a list of languages that can be translated in the UI.
-     * @remarks Currently, the Console only supports English.
+     * @remarks LGSP: Vietnamese (default) and English.
      * Tracker: https://github.com/wso2/product-is/issues/24778
      *
      * @returns List of translatable UI languages.
      */
     public static getAppSupportedLocales(): string[] {
-        return [ I18nModuleConstants.DEFAULT_FALLBACK_LANGUAGE ];
+        return [ I18nConstants.DEFAULT_LANGUAGE, I18nModuleConstants.DEFAULT_FALLBACK_LANGUAGE ];
     }
 
     /**

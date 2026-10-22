@@ -115,7 +115,7 @@ const Theme: OxygenTheme = extendTheme({
         MuiOutlinedInput: {
             styleOverrides: {
                 root: {
-                    fontFamily: "Gilmer, sans-serif"
+                    fontFamily: "'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif"
                 }
             }
         },
@@ -165,7 +165,7 @@ const Theme: OxygenTheme = extendTheme({
         borderRadius: 8
     },
     typography: {
-        fontFamily: "Gilmer, sans-serif",
+        fontFamily: "'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif",
         h1: {
             fontWeight: 700
         }

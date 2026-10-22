@@ -18,4 +18,5 @@
 
 export * from "./common";
 export * from "./common-users";
+export * from "./console";
 export * from "./myaccount";

@@ -6,7 +6,7 @@
        Fonts
 --------------------*/
 
-@primaryFont          : Gilmer;
+@primaryFont          : 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
 
 /*-------------------
      Borders
