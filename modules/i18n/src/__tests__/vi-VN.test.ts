@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as path from "path";
 import { EN_US, VI_VN } from "../translations";
 import { I18nModuleConstants } from "../constants";
 
@@ -18,10 +20,10 @@ describe("Vietnamese My Account translations", () => {
             I18nModuleConstants.MY_ACCOUNT_NAMESPACE,
             I18nModuleConstants.COMMON_USERS_NAMESPACE
         ]));
-        expect(VI_VN.meta.namespaces).not.toContain(I18nModuleConstants.CONSOLE_PORTAL_NAMESPACE);
+        expect(VI_VN.meta.namespaces).toEqual(EN_US.meta.namespaces);
     });
 
-    it.each([ "common", "commonUsers", "myAccount" ])("fully translates %s with matching placeholders", (namespace: string) => {
+    it.each(Object.keys(EN_US.resources.portals))("%s has the en-US keys and placeholders", (namespace: string) => {
         const english: Record<string, unknown> = flatten(EN_US.resources.portals[namespace]);
         const vietnamese: Record<string, unknown> = flatten(VI_VN.resources.portals[namespace]);
 
@@ -40,6 +42,14 @@ describe("Vietnamese My Account translations", () => {
                 expect(translated.trim().length, key).toBeGreaterThan(0);
             }
         }
+    });
+
+    it("has a Vietnamese entry for every string in the translation table", () => {
+        const english: string[] = JSON.parse(fs.readFileSync(path.join(__dirname, "../../translations-src/vi-VN/strings.en.json"), "utf8"));
+        const vietnamese: Record<string, string> = JSON.parse(
+            fs.readFileSync(path.join(__dirname, "../../translations-src/vi-VN/strings.vi.json"), "utf8"));
+
+        expect(english.map((_: string, id: number) => String(id)).filter((id: string) => !vietnamese[id])).toEqual([]);
     });
 
     it("uses Vietnamese labels on the main navigation and security flows", () => {

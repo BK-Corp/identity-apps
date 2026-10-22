@@ -323,7 +323,7 @@ export interface TenantsNS {
                     };
                 };
             };
-            placeholder: "Search by domain"
+            placeholder: string
         },
         count: string;
         emptyPlaceholder: {

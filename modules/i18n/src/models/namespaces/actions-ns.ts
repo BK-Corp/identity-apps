@@ -34,8 +34,8 @@ export interface actionsNS {
     },
     certificateWizard: {
         add : {
-            heading: "Add New Certificate",
-            subHeading: "Add new certificate to the action"
+            heading: string,
+            subHeading: string
         },
         change : {
             heading: string;
