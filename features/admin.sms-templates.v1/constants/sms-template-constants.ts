@@ -25,8 +25,10 @@ export class SMSTemplateConstants {
      */
     private constructor() {}
 
+    /** Locale of the built-in system templates (English); used only to fetch the fallback template. */
     public static readonly DEAFULT_LOCALE_FORMATTED: string = "en_US";
-    public static readonly DEAFULT_LOCALE: string = "en-US";
+    /** Default locale of the SMS template editor (LGSP: Vietnamese). */
+    public static readonly DEAFULT_LOCALE: string = "vi-VN";
     public static readonly INVALID_TEMPLATE_TYPE_ERROR_CODE: string = "NTM-65002";
     public static readonly TEMPLATE_NOT_AVAILABLE_ERROR_CODE: string = "NTM-65004";
 }
