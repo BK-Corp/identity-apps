@@ -79,7 +79,7 @@ const EmailCustomizationPage: FunctionComponent<EmailCustomizationPageInterface>
     const [ availableEmailTemplatesList, setAvailableEmailTemplatesList ] = useState<EmailTemplateType[]>([]);
     const [ selectedEmailTemplateId, setSelectedEmailTemplateId ] = useState<string>();
     const [ selectedEmailTemplateDescription, setSelectedEmailTemplateDescription ] = useState<string>();
-    const [ selectedLocale, setSelectedLocale ] = useState(I18nConstants.DEFAULT_FALLBACK_LANGUAGE);
+    const [ selectedLocale, setSelectedLocale ] = useState(I18nConstants.DEFAULT_LANGUAGE);
     const [ selectedEmailTemplate, setSelectedEmailTemplate ] = useState<EmailTemplate>();
     const [ currentEmailTemplate, setCurrentEmailTemplate ] = useState<EmailTemplate>();
     const [ showReplicatePreviousTemplateModal, setShowReplicatePreviousTemplateModal ] = useState(false);
@@ -295,7 +295,7 @@ const EmailCustomizationPage: FunctionComponent<EmailCustomizationPageInterface>
         setIsSystemTemplate(false);
         setIsInheritedTemplate(false);
         setCurrentEmailTemplate(undefined);
-        setSelectedLocale(I18nConstants.DEFAULT_FALLBACK_LANGUAGE);
+        setSelectedLocale(I18nConstants.DEFAULT_LANGUAGE);
         setSelectedEmailTemplateId(templateId);
         setSelectedEmailTemplateDescription(availableEmailTemplatesList?.find(
             (template: EmailTemplateType) => template.id === templateId)?.description);
@@ -393,7 +393,7 @@ const EmailCustomizationPage: FunctionComponent<EmailCustomizationPageInterface>
                         ".deleteEmailTemplate.error.message")
                 }));
             }).finally(() => {
-                setSelectedLocale(I18nConstants.DEFAULT_FALLBACK_LANGUAGE);
+                setSelectedLocale(I18nConstants.DEFAULT_LANGUAGE);
             });
     };
 
