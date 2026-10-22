@@ -615,7 +615,8 @@ export const myAccount: MyAccountNS = {
                     termsOfService: "Terms"
                 }
             },
-            organizationLabel: "This account is managed by"
+            organizationLabel: "This account is managed by",
+            support: "Support"
         },
         linkedAccounts: {
             accountTypes: {

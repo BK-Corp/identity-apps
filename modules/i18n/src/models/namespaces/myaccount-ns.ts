@@ -423,6 +423,7 @@ export interface MyAccountNS {
                 tooltip: string;
             };
             organizationLabel: string;
+            support?: string;
             dropdown: {
                 footer: {
                     cookiePolicy: string;

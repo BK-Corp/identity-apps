@@ -605,7 +605,8 @@ export const myAccount: MyAccountNS = {
                     termsOfService: "Điều khoản"
                 }
             },
-            organizationLabel: "Tài khoản này được quản lý bởi"
+            organizationLabel: "Tài khoản này được quản lý bởi",
+            support: "Hỗ trợ"
         },
         linkedAccounts: {
             accountTypes: {

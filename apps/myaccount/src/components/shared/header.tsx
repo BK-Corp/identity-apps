@@ -162,6 +162,10 @@ export const Header: FunctionComponent<HeaderPropsInterface> = (
     const { raw, theme } = useThemeProvider();
 
     const brandingPreferenceUrls: BrandingPreferenceURLInterface = raw?.preference?.urls;
+    // Custom LGSP key set by the branding bootstrap; only plain http(s) targets are rendered.
+    const supportUrl: string | undefined = /^https?:\/\//.test(brandingPreferenceUrls?.supportURL ?? "")
+        ? brandingPreferenceUrls.supportURL
+        : undefined;
     const isLinkedAccountsFeatureEnabled: boolean = isFeatureEnabled(personalInfoFeatureConfig,
         AppConstants.FEATURE_DICTIONARY.get("PROFILEINFO_LINKED_ACCOUNTS") as string);
 
@@ -486,6 +490,19 @@ export const Header: FunctionComponent<HeaderPropsInterface> = (
             onCollapsibleHamburgerClick={ handleSidePanelToggleClick }
             position="fixed"
             rightAlignedElements={ [
+                supportUrl && (
+                    <Button
+                        component="a"
+                        color="inherit"
+                        href={ supportUrl }
+                        target="_blank"
+                        rel="noreferrer"
+                        key="support"
+                        data-componentid="app-header-support-link"
+                    >
+                        { t("myAccount:components.header.support") }
+                    </Button>
+                ),
                 showLanguageSwitcher && Object.entries(filteredSupportedI18nLanguages)?.length > 1 && (
                     <>
                         <Button
