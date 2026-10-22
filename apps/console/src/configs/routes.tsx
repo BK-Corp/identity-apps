@@ -151,7 +151,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: getSidePanelIcons().administrators
             },
             id: "administrators",
-            name: "Administrators",
+            name: "consoleSettings:administrators.tabLabel",
             order: 5,
             path: AppConstants.getPaths().get("ADMINISTRATORS"),
             protected: true,
@@ -243,7 +243,9 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: getSidePanelIcons().verifiableCredentials
             },
             id: "verifiableCredentials",
-            name: isPresentationDefinitionsEnabled ? "Credential Templates" : "Verifiable Credentials",
+            name: isPresentationDefinitionsEnabled
+                ? "verifiableCredentials:page.title"
+                : "extensions:manage.sidePanel.categories.verifiableCredentials",
             order: 7,
             path: AppConstants.getPaths().get("VC_TEMPLATES"),
             protected: true,
@@ -282,7 +284,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: getSidePanelIcons().presentationDefinitions
             },
             id: "presentationDefinitions",
-            name: "Presentation Definitions",
+            name: "presentationDefinitions:page.title",
             order: 9,
             path: AppConstants.getPaths().get("VP_DEFINITIONS"),
             protected: true,
@@ -296,7 +298,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: getSidePanelIcons().home
             },
             id: "gettingStarted",
-            name: "Home",
+            name: "extensions:develop.sidePanel.home",
             order: 0,
             path: AppConstants.getPaths().get("GETTING_STARTED"),
             protected: true,
@@ -332,7 +334,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: <LinearNodesIcon />
             },
             id: "flows",
-            name: "Flows",
+            name: "flows:page.title",
             order: 0,
             path: AppConstants.getPaths().get("FLOWS"),
             protected: true,
@@ -580,7 +582,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: getSidePanelIcons().agents
             },
             id: "agents",
-            name: "Agents",
+            name: "agents:title",
             order: 1,
             path: AppConstants.getPaths().get("AGENTS"),
             protected: true,
@@ -639,7 +641,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: <UserGroupIcon className="icon" fill="black" />
             },
             id: "groups",
-            name: "Groups",
+            name: "console:manage.features.sidePanel.groups",
             order: 6,
             path: AppConstants.getPaths().get("GROUPS"),
             protected: true,
@@ -1013,7 +1015,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
             exact: true,
             icon: { icon: <EnvelopeIcon fill="black" className="icon" /> },
             id: "emailTemplates",
-            name: "Email Templates",
+            name: "console:manage.features.sidePanel.emailTemplates",
             order: 14,
             path: `${ AppConstants.getDeveloperViewBasePath() }/email-management`,
             protected: true,
@@ -1044,7 +1046,9 @@ export const getAppViewRoutes = (): RouteInterface[] => {
             exact: true,
             icon: { icon: <EnvelopeGearIcon fill="black" className="icon" /> },
             id: "notificationChannels",
-            name:  isPushProviderFeatureEnabled ? "Notification Channels" : "Email & SMS",
+            name: isPushProviderFeatureEnabled
+                ? "extensions:develop.notificationChannel.title"
+                : "extensions:develop.sidePanel.emailAndSms",
             order: 16,
             path: isPushProviderFeatureEnabled
                 ? AppConstants.getPaths().get("NOTIFICATION_CHANNELS")
@@ -1432,7 +1436,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: <LightbulbOnIcon fill="black" className="icon" />
             },
             id: "insights",
-            name: "Insights",
+            name: "insights:title",
             order: 23,
             path: AppConstants.getPaths().get("INSIGHTS"),
             protected: true,
@@ -1742,7 +1746,7 @@ export const getAppViewRoutes = (): RouteInterface[] => {
                 icon: <UserGroupIcon className="icon" fill="black" />
             },
             id: "groups",
-            name: "Groups",
+            name: "console:manage.features.sidePanel.groups",
             order: 6,
             path: AppConstants.getPaths().get("GROUPS"),
             protected: true,

@@ -2344,6 +2344,8 @@ export interface Extensions {
             smsProvider: string;
             eventPublishing: string;
             emailTemplates: string;
+            emailAndSms: string;
+            home: string;
             organizationInfo: string;
         };
         moesifAnalytics: {
