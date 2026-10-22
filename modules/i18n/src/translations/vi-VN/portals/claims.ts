@@ -47,8 +47,8 @@ export const claims: ClaimsNS = {
             heading: "SCIM 2.0"
         },
         vc: {
-            description: "Biểu diễn Verifiable Credentials cho thuộc tính người dùng.",
-            heading: "Verifiable Credentials"
+            description: "Biểu diễn thông tin xác thực có thể xác minh cho thuộc tính người dùng.",
+            heading: "Thông tin xác thực có thể xác minh"
         }
     },
     dialects: {

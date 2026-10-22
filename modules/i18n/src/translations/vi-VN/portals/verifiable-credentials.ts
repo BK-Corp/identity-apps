@@ -96,7 +96,7 @@ export const verifiableCredentials: VerifiableCredentialsNS = {
             general: "Chung",
             offer: "Lời đề nghị (Offer)"
         },
-        backButton: "Quay lại Verifiable Credentials",
+        backButton: "Quay lại thông tin xác thực có thể xác minh",
         form: {
             displayName: {
                 label: "Tên hiển thị",

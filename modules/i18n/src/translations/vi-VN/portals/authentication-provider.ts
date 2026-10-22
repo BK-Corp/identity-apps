@@ -2292,7 +2292,7 @@ export const authenticationProvider: AuthenticationProviderNS = {
         },
         digitalWallet: {
             title: "Ví số",
-            subTitle: "Cho phép người dùng đăng nhập hoặc đăng ký bằng thông tin xác thực có thể xác minh (verifiable credentials).",
+            subTitle: "Cho phép người dùng đăng nhập hoặc đăng ký bằng thông tin xác thực có thể xác minh (thông tin xác thực có thể xác minh).",
             tabs: {
                 general: "Chung",
                 attributes: "Thuộc tính"
@@ -2310,7 +2310,7 @@ export const authenticationProvider: AuthenticationProviderNS = {
                     }
                 },
                 description: {
-                    defaultValue: "Cho phép người dùng đăng nhập hoặc đăng ký bằng thông tin xác thực có thể xác minh (verifiable credentials).",
+                    defaultValue: "Cho phép người dùng đăng nhập hoặc đăng ký bằng thông tin xác thực có thể xác minh (thông tin xác thực có thể xác minh).",
                     hint: "Mô tả tùy chọn về mục đích của kết nối ví số này."
                 },
                 presentationDefinition: {

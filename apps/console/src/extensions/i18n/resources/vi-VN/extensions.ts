@@ -3829,7 +3829,7 @@ export const extensions: Extensions = {
                 attributeManagement: "Quản lý thuộc tính",
                 AccountManagement: "Quản lý tài khoản",
                 userManagement: "Quản lý danh tính",
-                verifiableCredentials: "Verifiable Credentials",
+                verifiableCredentials: "Thông tin xác thực có thể xác minh",
                 workflows: "Quy trình",
                 customerDataService: "Dữ liệu khách hàng",
                 organizationSettings: "Cài đặt tổ chức"
