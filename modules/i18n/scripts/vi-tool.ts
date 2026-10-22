@@ -14,7 +14,6 @@ import * as fs from "fs";
 import * as path from "path";
 import * as enPortals from "../src/translations/en-US/portals";
 import * as viPortals from "../src/translations/vi-VN/portals";
-import { extensions as enExtensions } from "../../../apps/console/src/extensions/i18n/resources/en-US/extensions";
 
 const ROOT: string = path.resolve(__dirname, "..");
 const SRC: string = path.join(ROOT, "translations-src/vi-VN");
@@ -25,6 +24,8 @@ const VI_FILE: string = path.join(SRC, "strings.vi.json");
 // Hand-written, fully reviewed bundles: used as a seed, never regenerated.
 // Console "extensions" namespace lives in the app, not in the i18n module.
 const EXT_DIR: string = path.resolve(ROOT, "../../apps/console/src/extensions/i18n/resources");
+// Loaded lazily from a computed path so Nx does not infer an i18n -> console project dependency (it would be circular).
+let enExtensions: Record<string, unknown> = {};
 const HAND_WRITTEN: string[] = [ "common", "commonUsers", "myAccount" ];
 // Translate the screens people use daily first.
 const ORDER: string[] = [
@@ -238,10 +239,13 @@ const build = (): void => {
 
 const [ , , command, a, b ] = process.argv;
 
-({
-    build,
-    init,
-    merge: () => merge(a),
-    status,
-    todo: () => todo(Number(a ?? 0), Number(b ?? 100))
-}[command] ?? (() => console.error("usage: init|todo|merge|status|build")))();
+(async (): Promise<void> => {
+    enExtensions = (await import(path.join(EXT_DIR, "en-US", "extensions"))).extensions;
+    ({
+        build,
+        init,
+        merge: () => merge(a),
+        status,
+        todo: () => todo(Number(a ?? 0), Number(b ?? 100))
+    }[command] ?? (() => console.error("usage: init|todo|merge|status|build")))();
+})();
