@@ -28,10 +28,10 @@ import React, { FunctionComponent, ReactElement, useCallback, useEffect, useStat
 
 /**
  * The customer admin portal is served from the same origin as the Console (`/quantri`). Its API accepts the
- * Console access token for this one read-only endpoint, so the page needs no extra sign-in.
+ * Console access token for this one read-only endpoint. The URL must be absolute under `serverOrigin`, or the
+ * SPA client refuses to attach the token.
  */
 const ACTIVITY_API_PATH: string = "/quantri/api/admin/monitoring/auth";
-const ACTIVITY_DASHBOARD_PATH: string = "/quantri/monitoring";
 
 interface ActivityPointInterface {
     time: string;
@@ -77,7 +77,7 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
             const response: HttpResponse<ActivityStatsInterface> = await httpClient({
                 headers: { Accept: "application/json" },
                 method: "GET",
-                url: `${ ACTIVITY_API_PATH }?hours=${ hours }`
+                url: `${ window[ "AppUtils" ]?.getConfig()?.serverOrigin }${ ACTIVITY_API_PATH }?hours=${ hours }`
             });
 
             setStats(response.data);
@@ -118,9 +118,6 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                             { range.label }
                         </Button>
                     )) }
-                    <Button href={ ACTIVITY_DASHBOARD_PATH } data-componentid={ `${ componentId }-open-dashboard` }>
-                        Xem nhật ký chi tiết
-                    </Button>
                 </Box>
                 { failed && (
                     <Typography color="error">
