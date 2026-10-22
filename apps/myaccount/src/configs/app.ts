@@ -220,6 +220,11 @@ export class Config {
                         metaFile
                     )
             },
+            detection: {
+                // Respect explicit choices; browser language must not override the portal default.
+                order: [ "querystring", "localStorage", "cookie" ]
+            },
+            fallbackLng: [ I18nConstants.DEFAULT_LANGUAGE, I18nConstants.DEFAULT_FALLBACK_LANGUAGE ],
             load: "currentOnly", // lookup only current lang key(en-US). Prevents 404 from `en`.
             ns: [
                 I18nConstants.COMMON_NAMESPACE,

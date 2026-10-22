@@ -45,7 +45,7 @@ import { useSelector } from "react-redux";
 import { useGetBrandingPreference } from "./api/branding-preferences";
 import { PreLoader } from "./components";
 import { Config } from "./configs";
-import { AppConstants } from "./constants";
+import { AppConstants, I18nConstants } from "./constants";
 import { history } from "./helpers";
 import useSignIn from "./hooks/use-sign-in";
 import { AppState, store } from "./store";
@@ -230,9 +230,9 @@ export const ProtectedApp: FunctionComponent<AppPropsInterface> = (): ReactEleme
 
                 if (!isSupported) {
                     try {
-                        await I18n.instance.changeLanguage(I18nModuleConstants.DEFAULT_FALLBACK_LANGUAGE);
+                        await I18n.instance.changeLanguage(I18nConstants.DEFAULT_LANGUAGE);
                     } catch (error) {
-                        throw new LanguageChangeException(I18nModuleConstants.DEFAULT_FALLBACK_LANGUAGE, error);
+                        throw new LanguageChangeException(I18nConstants.DEFAULT_LANGUAGE, error);
                     }
                 }
             } catch (error) {

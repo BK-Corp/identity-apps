@@ -166,14 +166,6 @@ export const Header: FunctionComponent<HeaderPropsInterface> = (
         AppConstants.FEATURE_DICTIONARY.get("PROFILEINFO_LINKED_ACCOUNTS") as string);
 
     useEffect(() => {
-        const localeCookie: string = CookieStorageUtils.getItem("ui_lang");
-
-        if (localeCookie) {
-            handleLanguageSwitch(localeCookie.replace("_", "-"));
-        }
-    }, []);
-
-    useEffect(() => {
         if (isEmpty(profileInfo)) {
             dispatch((getProfileInformation() as unknown) as AnyAction);
         }

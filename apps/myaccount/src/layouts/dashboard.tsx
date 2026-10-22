@@ -120,12 +120,7 @@ export const DashboardLayout: FunctionComponent<PropsWithChildren<DashboardLayou
     const hasLocalAccount: boolean = useSelector((state: AppState) => state.authenticationInformation.hasLocalAccount);
 
     useEffect(() => {
-        const localeCookie: string = CookieStorageUtils.getItem("ui_lang");
-
-        if (localeCookie) {
-            handleLanguageSwitch(localeCookie.replace("_", "-"));
-            handleDirection(localeCookie.replace("_", "-"));
-        }
+        handleDirection(I18n.instance.language);
     }, []);
 
     /**

@@ -1,5 +1,9 @@
 # @wso2is/myaccount
 
+## Unreleased
+
+- Add complete Vietnamese translations and default My Account to vi-VN independently of the browser/login language, while preserving saved My Account language choices.
+
 ## 4.4.3
 
 ### Patch Changes

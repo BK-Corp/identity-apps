@@ -610,7 +610,7 @@ export const TOTPAuthenticator: React.FunctionComponent<TOTPProps> = (
                             ? <QRCode value={ qrCode } data-testid={ `${ testId }-modals-scan-qrcode` }/>
                             : null
                         }
-                        <Divider className="pl-2 pr-2" horizontal>OR</Divider>
+                        <Divider className="pl-2 pr-2" horizontal>{ t("common:or") }</Divider>
                         { renderTOTPSecretDisplay() }
                         { renderTOTPVerifyForm() }
                     </Segment>
@@ -798,7 +798,7 @@ export const TOTPAuthenticator: React.FunctionComponent<TOTPProps> = (
                                 ? <QRCode value={ qrCode } data-testid={ `${ testId }-view-modals-scan-qrcode` }/>
                                 : null
                             }
-                            <Divider className="pl-2 pr-2" horizontal>OR</Divider>
+                            <Divider className="pl-2 pr-2" horizontal>{ t("common:or") }</Divider>
                             { renderTOTPSecretDisplay() }
                         </Segment>
                         <div className="ml-3 mr-3 mt-3">
@@ -869,7 +869,7 @@ export const TOTPAuthenticator: React.FunctionComponent<TOTPProps> = (
                         <Segment textAlign="center" basic className="qr-code">
                             <QRCode value={ qrCode } data-testid={ `${ testId }-modals-scan-qrcode` }/>
                         </Segment>
-                        <Divider className="pl-2 pr-2" horizontal>OR</Divider>
+                        <Divider className="pl-2 pr-2" horizontal>{ t("common:or") }</Divider>
                         { renderTOTPSecretDisplay() }
                         { renderTOTPVerifyForm(true) }
                     </Segment>

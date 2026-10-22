@@ -62,6 +62,8 @@ export class I18nConstants {
      */
     public static readonly XHR_BACKEND_PLUGIN_ENABLED: boolean = true;
 
+    public static readonly DEFAULT_LANGUAGE: string = "vi-VN";
+
     /**
      * Default fallback language.
      */

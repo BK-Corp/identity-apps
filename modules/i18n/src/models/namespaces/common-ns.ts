@@ -251,6 +251,7 @@ export interface CommonNS {
     organizationName: string;
     operatingSystem: string;
     operations: string;
+    or?: string;
     operationType: string;
     overview: string;
     parameter: string;
