@@ -104,7 +104,10 @@ export class RouteUtils {
             return;
         }
 
-        history.push(sortBy(routes, "order")[0].path);
+        const fallbackPath: string | undefined = sortBy(routes, "order")[0]?.path;
+
+        // No route is available for this view (e.g. every menu is hidden by the feature matrix): avoid a crash.
+        history.push(fallbackPath ?? AppConstants.getPaths().get("UNAUTHORIZED"));
     }
 
     /**

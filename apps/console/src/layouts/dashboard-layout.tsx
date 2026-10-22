@@ -206,7 +206,8 @@ const DashboardLayout: FunctionComponent<RouteComponentProps> = (
         }
 
         if (initLoad.current) {
-            if (!isOrganizationSwitchRequestLoading) {
+            // Wait until the routes are computed; an empty list would leave nothing to fall back to.
+            if (!isOrganizationSwitchRequestLoading && filteredRoutes?.length) {
                 RouteUtils.gracefullyHandleRouting(
                     filteredRoutes,
                     AppConstants.getAdminViewBasePath(),
