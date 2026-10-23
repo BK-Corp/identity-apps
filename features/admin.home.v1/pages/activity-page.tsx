@@ -20,6 +20,13 @@ import Box from "@oxygen-ui/react/Box";
 import Button from "@oxygen-ui/react/Button";
 import Card from "@oxygen-ui/react/Card";
 import CardContent from "@oxygen-ui/react/CardContent";
+import LinearProgress from "@oxygen-ui/react/LinearProgress";
+import Table from "@oxygen-ui/react/Table";
+import TableBody from "@oxygen-ui/react/TableBody";
+import TableCell from "@oxygen-ui/react/TableCell";
+import TableContainer from "@oxygen-ui/react/TableContainer";
+import TableHead from "@oxygen-ui/react/TableHead";
+import TableRow from "@oxygen-ui/react/TableRow";
 import Typography from "@oxygen-ui/react/Typography";
 import { AsgardeoSPAClient, HttpClientInstance, HttpResponse } from "@asgardeo/auth-react";
 import { IdentifiableComponentInterface } from "@wso2is/core/models";
@@ -57,6 +64,9 @@ interface ActivityEventInterface {
     result: string;
     app: string;
     user: string;
+    target: string;
+    store: string;
+    requestType: string;
     message: string;
 }
 
@@ -70,24 +80,108 @@ const httpClient: HttpClientInstance = AsgardeoSPAClient.getInstance()
     .httpRequest.bind(AsgardeoSPAClient.getInstance());
 
 
-const RankTable: FunctionComponent<{ title: string; head: string; rows: [ string, number ][] }> = (
-    { title, head, rows }: { title: string; head: string; rows: [ string, number ][] }
-): ReactElement => (
-    <Card sx={ { flex: 1, minWidth: 280 } }>
-        <CardContent>
-            <Typography variant="subtitle1">{ title }</Typography>
-            <Box component="table" sx={ { borderCollapse: "collapse", mt: 1, width: "100%" } }>
-                <thead><tr><th align="left">{ head }</th><th align="right">Lượt</th></tr></thead>
-                <tbody>
-                    { rows.length === 0 && <tr><td colSpan={ 2 }>Chưa có dữ liệu</td></tr> }
-                    { rows.map(([ name, count ]: [ string, number ]) => (
-                        <tr key={ name }><td>{ name }</td><td align="right">{ count.toLocaleString("vi-VN") }</td></tr>
+const RankBars: FunctionComponent<{ title: string; rows: [ string, number ][] }> = (
+    { title, rows }: { title: string; rows: [ string, number ][] }
+): ReactElement => {
+    const top: number = Math.max(1, ...rows.map(([ , count ]: [ string, number ]) => count));
+
+    return (
+        <Card sx={ { flex: 1, minWidth: 280 } }>
+            <CardContent>
+                <Typography variant="subtitle1">{ title }</Typography>
+                { rows.length === 0 && <Typography variant="body2" sx={ { mt: 1 } }>Chưa có dữ liệu</Typography> }
+                { rows.map(([ name, count ]: [ string, number ]) => (
+                    <Box key={ name } sx={ { mt: 1.5 } }>
+                        <Box sx={ { display: "flex", justifyContent: "space-between", gap: 1 } }>
+                            <Typography variant="body2" noWrap>{ name }</Typography>
+                            <Typography variant="body2">{ count.toLocaleString("vi-VN") }</Typography>
+                        </Box>
+                        <LinearProgress variant="determinate" value={ (count / top) * 100 } sx={ { height: 8, borderRadius: 4 } } />
+                    </Box>
+                )) }
+            </CardContent>
+        </Card>
+    );
+};
+
+const PAGE_SIZES: number[] = [ 10, 25, 50 ];
+
+const EventsTable: FunctionComponent<{ events: ActivityEventInterface[] }> = (
+    { events }: { events: ActivityEventInterface[] }
+): ReactElement => {
+    const [ page, setPage ] = useState<number>(0);
+    const [ size, setSize ] = useState<number>(10);
+    const [ open, setOpen ] = useState<string | null>(null);
+    const pages: number = Math.max(1, Math.ceil(events.length / size));
+    const current: number = Math.min(page, pages - 1);
+    const rows: ActivityEventInterface[] = events.slice(current * size, (current + 1) * size);
+    const heads: string[] = [ "Thời gian", "Hành động", "Kết quả", "Ứng dụng", "Tài khoản", "Đối tượng", "Kho tài khoản", "Giao thức" ];
+
+    useEffect(() => { setPage(0); setOpen(null); }, [ events ]);
+
+    return (
+        <Card>
+            <CardContent>
+                <Typography variant="subtitle1">Nhật ký gốc ({ events.length.toLocaleString("vi-VN") } sự kiện đăng nhập/đăng xuất)</Typography>
+                <TableContainer sx={ { mt: 1 } }>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>{ heads.map((h: string) => <TableCell key={ h } sx={ { fontWeight: 600 } }>{ h }</TableCell>) }</TableRow>
+                        </TableHead>
+                        <TableBody>
+                            { rows.length === 0 && (
+                                <TableRow><TableCell colSpan={ heads.length }>Không có sự kiện trong khoảng này</TableCell></TableRow>
+                            ) }
+                            { rows.map((e: ActivityEventInterface, i: number) => {
+                                const key: string = `${ e.timestamp }-${ current }-${ i }`;
+
+                                return (
+                                    <React.Fragment key={ key }>
+                                        <TableRow hover sx={ { cursor: "pointer" } } onClick={ () => setOpen(open === key ? null : key) }>
+                                            <TableCell sx={ { whiteSpace: "nowrap" } }>{ new Date(e.timestamp).toLocaleString("vi-VN") }</TableCell>
+                                            <TableCell>{ e.action }</TableCell>
+                                            <TableCell sx={ { color: e.result === "Failure" ? "error.main" : "success.main" } }>
+                                                { e.result }
+                                            </TableCell>
+                                            <TableCell>{ e.app }</TableCell>
+                                            <TableCell>{ e.user }</TableCell>
+                                            <TableCell>{ e.target }</TableCell>
+                                            <TableCell>{ e.store }</TableCell>
+                                            <TableCell>{ e.requestType }</TableCell>
+                                        </TableRow>
+                                        { open === key && (
+                                            <TableRow>
+                                                <TableCell colSpan={ heads.length } sx={ { bgcolor: "action.hover" } }>
+                                                    <Box component="pre" sx={ { fontFamily: "monospace", fontSize: 12, m: 0, whiteSpace: "pre-wrap", wordBreak: "break-all" } }>
+                                                        { e.message }
+                                                    </Box>
+                                                </TableCell>
+                                            </TableRow>
+                                        ) }
+                                    </React.Fragment>
+                                );
+                            }) }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <Box sx={ { alignItems: "center", display: "flex", flexWrap: "wrap", gap: 1, justifyContent: "flex-end", mt: 2 } }>
+                    <Typography variant="body2">Số dòng mỗi trang:</Typography>
+                    { PAGE_SIZES.map((n: number) => (
+                        <Button key={ n } size="small" variant={ n === size ? "contained" : "outlined" } onClick={ () => { setSize(n); setPage(0); } }>
+                            { n }
+                        </Button>
                     )) }
-                </tbody>
-            </Box>
-        </CardContent>
-    </Card>
-);
+                    <Typography variant="body2" sx={ { mx: 1 } }>Trang { current + 1 } / { pages }</Typography>
+                    <Button size="small" variant="outlined" disabled={ current === 0 } onClick={ () => setPage(0) }>Đầu</Button>
+                    <Button size="small" variant="outlined" disabled={ current === 0 } onClick={ () => setPage(current - 1) }>Trước</Button>
+                    <Button size="small" variant="outlined" disabled={ current >= pages - 1 } onClick={ () => setPage(current + 1) }>Sau</Button>
+                    <Button size="small" variant="outlined" disabled={ current >= pages - 1 } onClick={ () => setPage(pages - 1) }>Cuối</Button>
+                </Box>
+                <Typography variant="caption">Bấm vào một dòng để xem nguyên văn dòng log.</Typography>
+            </CardContent>
+        </Card>
+    );
+};
 
 /**
  * Replaces "Getting started": login/logout statistics from the log index, via the customer admin API.
@@ -197,49 +291,17 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                 ) }
                 { stats && (
                     <Box sx={ { display: "flex", flexWrap: "wrap", gap: 2 } }>
-                        <RankTable
+                        <RankBars
                             title={ `Ứng dụng đăng nhập nhiều nhất (trong ${ stats.sample } sự kiện gần nhất)` }
-                            head="Ứng dụng"
                             rows={ stats.topApps.map((a: { app: string; count: number }): [ string, number ] => [ a.app, a.count ]) }
                         />
-                        <RankTable
+                        <RankBars
                             title={ `Tài khoản đăng nhập nhiều nhất (trong ${ stats.sample } sự kiện gần nhất)` }
-                            head="Tài khoản"
                             rows={ stats.topUsers.map((u: { user: string; count: number }): [ string, number ] => [ u.user, u.count ]) }
                         />
                     </Box>
                 ) }
-                { stats && (
-                    <Card>
-                        <CardContent>
-                            <Typography variant="subtitle1">
-                                Nhật ký gốc ({ stats.events.length } sự kiện đăng nhập/đăng xuất mới nhất)
-                            </Typography>
-                            <Box sx={ { maxHeight: 420, mt: 1, overflow: "auto" } }>
-                                <Box component="table" sx={ { borderCollapse: "collapse", fontSize: 12, width: "100%" } }>
-                                    <thead>
-                                        <tr><th align="left">Thời gian</th><th align="left">Hành động</th>
-                                            <th align="left">Kết quả</th><th align="left">Ứng dụng</th>
-                                            <th align="left">Tài khoản</th><th align="left">Nội dung</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        { stats.events.length === 0 && <tr><td colSpan={ 6 }>Không có sự kiện trong khoảng này</td></tr> }
-                                        { stats.events.map((e: ActivityEventInterface, i: number) => (
-                                            <tr key={ `${ e.timestamp }-${ i }` } style={ { verticalAlign: "top" } }>
-                                                <td style={ { whiteSpace: "nowrap" } }>{ new Date(e.timestamp).toLocaleString("vi-VN") }</td>
-                                                <td>{ e.action }</td>
-                                                <td style={ { color: e.result === "Failure" ? "#d32f2f" : undefined } }>{ e.result }</td>
-                                                <td>{ e.app }</td>
-                                                <td>{ e.user }</td>
-                                                <td style={ { fontFamily: "monospace", wordBreak: "break-all" } }>{ e.message }</td>
-                                            </tr>
-                                        )) }
-                                    </tbody>
-                                </Box>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                ) }
+                { stats && <EventsTable events={ stats.events } /> }
             </Box>
         </PageLayout>
     );
