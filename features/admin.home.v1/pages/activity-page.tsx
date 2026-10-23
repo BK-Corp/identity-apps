@@ -45,6 +45,19 @@ interface ActivityStatsInterface {
     interval: string;
     totals: Omit<ActivityPointInterface, "time">;
     timeline: ActivityPointInterface[];
+    sample: number;
+    topApps: { app: string; count: number }[];
+    topUsers: { user: string; count: number }[];
+    events: ActivityEventInterface[];
+}
+
+interface ActivityEventInterface {
+    timestamp: string;
+    action: string;
+    result: string;
+    app: string;
+    user: string;
+    message: string;
 }
 
 const RANGES: { hours: number; label: string }[] = [
@@ -55,6 +68,26 @@ const RANGES: { hours: number; label: string }[] = [
 
 const httpClient: HttpClientInstance = AsgardeoSPAClient.getInstance()
     .httpRequest.bind(AsgardeoSPAClient.getInstance());
+
+
+const RankTable: FunctionComponent<{ title: string; head: string; rows: [ string, number ][] }> = (
+    { title, head, rows }: { title: string; head: string; rows: [ string, number ][] }
+): ReactElement => (
+    <Card sx={ { flex: 1, minWidth: 280 } }>
+        <CardContent>
+            <Typography variant="subtitle1">{ title }</Typography>
+            <Box component="table" sx={ { borderCollapse: "collapse", mt: 1, width: "100%" } }>
+                <thead><tr><th align="left">{ head }</th><th align="right">Lượt</th></tr></thead>
+                <tbody>
+                    { rows.length === 0 && <tr><td colSpan={ 2 }>Chưa có dữ liệu</td></tr> }
+                    { rows.map(([ name, count ]: [ string, number ]) => (
+                        <tr key={ name }><td>{ name }</td><td align="right">{ count.toLocaleString("vi-VN") }</td></tr>
+                    )) }
+                </tbody>
+            </Box>
+        </CardContent>
+    </Card>
+);
 
 /**
  * Replaces "Getting started": login/logout statistics from the log index, via the customer admin API.
@@ -93,10 +126,14 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
 
     const max: number = Math.max(1, ...(stats?.timeline ?? []).map((p: ActivityPointInterface) =>
         p.loginSuccess + p.loginFailure));
-    const cards: [ string, number | undefined ][] = [
+    const attempts: number = (stats?.totals.loginSuccess ?? 0) + (stats?.totals.loginFailure ?? 0);
+    const rate: string | undefined = stats === null ? undefined
+        : attempts === 0 ? "—" : `${ Math.round((stats.totals.loginSuccess / attempts) * 1000) / 10 }%`;
+    const cards: [ string, number | string | undefined ][] = [
         [ "Đăng nhập thành công", stats?.totals.loginSuccess ],
         [ "Đăng nhập thất bại", stats?.totals.loginFailure ],
-        [ "Đăng xuất", stats?.totals.logout ]
+        [ "Đăng xuất", stats?.totals.logout ],
+        [ "Tỷ lệ đăng nhập thành công", rate ]
     ];
 
     return (
@@ -125,7 +162,7 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                     </Typography>
                 ) }
                 <Box sx={ { display: "grid", gap: 2, gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" } }>
-                    { cards.map(([ title, count ]: [ string, number | undefined ]) => (
+                    { cards.map(([ title, count ]: [ string, number | string | undefined ]) => (
                         <Card key={ title }>
                             <CardContent>
                                 <Typography variant="body2">{ title }</Typography>
@@ -154,6 +191,51 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                                         <Box sx={ { bgcolor: "success.main", height: `${ (p.loginSuccess / max) * 100 }%` } } />
                                     </Box>
                                 )) }
+                            </Box>
+                        </CardContent>
+                    </Card>
+                ) }
+                { stats && (
+                    <Box sx={ { display: "flex", flexWrap: "wrap", gap: 2 } }>
+                        <RankTable
+                            title={ `Ứng dụng đăng nhập nhiều nhất (trong ${ stats.sample } sự kiện gần nhất)` }
+                            head="Ứng dụng"
+                            rows={ stats.topApps.map((a: { app: string; count: number }): [ string, number ] => [ a.app, a.count ]) }
+                        />
+                        <RankTable
+                            title={ `Tài khoản đăng nhập nhiều nhất (trong ${ stats.sample } sự kiện gần nhất)` }
+                            head="Tài khoản"
+                            rows={ stats.topUsers.map((u: { user: string; count: number }): [ string, number ] => [ u.user, u.count ]) }
+                        />
+                    </Box>
+                ) }
+                { stats && (
+                    <Card>
+                        <CardContent>
+                            <Typography variant="subtitle1">
+                                Nhật ký gốc ({ stats.events.length } sự kiện đăng nhập/đăng xuất mới nhất)
+                            </Typography>
+                            <Box sx={ { maxHeight: 420, mt: 1, overflow: "auto" } }>
+                                <Box component="table" sx={ { borderCollapse: "collapse", fontSize: 12, width: "100%" } }>
+                                    <thead>
+                                        <tr><th align="left">Thời gian</th><th align="left">Hành động</th>
+                                            <th align="left">Kết quả</th><th align="left">Ứng dụng</th>
+                                            <th align="left">Tài khoản</th><th align="left">Nội dung</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        { stats.events.length === 0 && <tr><td colSpan={ 6 }>Không có sự kiện trong khoảng này</td></tr> }
+                                        { stats.events.map((e: ActivityEventInterface, i: number) => (
+                                            <tr key={ `${ e.timestamp }-${ i }` } style={ { verticalAlign: "top" } }>
+                                                <td style={ { whiteSpace: "nowrap" } }>{ new Date(e.timestamp).toLocaleString("vi-VN") }</td>
+                                                <td>{ e.action }</td>
+                                                <td style={ { color: e.result === "Failure" ? "#d32f2f" : undefined } }>{ e.result }</td>
+                                                <td>{ e.app }</td>
+                                                <td>{ e.user }</td>
+                                                <td style={ { fontFamily: "monospace", wordBreak: "break-all" } }>{ e.message }</td>
+                                            </tr>
+                                        )) }
+                                    </tbody>
+                                </Box>
                             </Box>
                         </CardContent>
                     </Card>
