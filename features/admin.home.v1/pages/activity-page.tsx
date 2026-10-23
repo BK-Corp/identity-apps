@@ -146,7 +146,7 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                                 { stats.timeline.map((p: ActivityPointInterface) => (
                                     <Box
                                         key={ p.time }
-                                        sx={ { display: "flex", flex: 1, flexDirection: "column", justifyContent: "flex-end" } }
+                                        sx={ { display: "flex", flex: 1, flexDirection: "column", height: "100%", justifyContent: "flex-end" } }
                                         title={ `${ new Date(p.time).toLocaleString("vi-VN") }: ${ p.loginSuccess } thành công, `
                                             + `${ p.loginFailure } thất bại, ${ p.logout } đăng xuất` }
                                     >
