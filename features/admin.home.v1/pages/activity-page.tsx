@@ -21,6 +21,7 @@ import Button from "@oxygen-ui/react/Button";
 import Card from "@oxygen-ui/react/Card";
 import CardContent from "@oxygen-ui/react/CardContent";
 import LinearProgress from "@oxygen-ui/react/LinearProgress";
+import TextField from "@oxygen-ui/react/TextField";
 import Table from "@oxygen-ui/react/Table";
 import TableBody from "@oxygen-ui/react/TableBody";
 import TableCell from "@oxygen-ui/react/TableCell";
@@ -31,6 +32,9 @@ import Typography from "@oxygen-ui/react/Typography";
 import { AsgardeoSPAClient, HttpClientInstance, HttpResponse } from "@asgardeo/auth-react";
 import { IdentifiableComponentInterface } from "@wso2is/core/models";
 import { PageLayout } from "@wso2is/react-components";
+import {
+    Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis
+} from "recharts";
 import React, { FunctionComponent, ReactElement, useCallback, useEffect, useState } from "react";
 
 /**
@@ -195,31 +199,43 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
     const { ["data-componentid"]: componentId = "activity-page" } = props;
 
     const [ hours, setHours ] = useState<number>(24);
+    const [ from, setFrom ] = useState<string>("");
+    const [ to, setTo ] = useState<string>("");
+    const [ loading, setLoading ] = useState<boolean>(false);
+    const [ updatedAt, setUpdatedAt ] = useState<Date | null>(null);
     const [ stats, setStats ] = useState<ActivityStatsInterface | null>(null);
     const [ failed, setFailed ] = useState<boolean>(false);
 
+    // Khoảng tùy chọn chỉ có hiệu lực khi đủ cả hai đầu và đầu "Từ" trước đầu "Đến".
+    const custom: boolean = from !== "" && to !== "" && new Date(from) < new Date(to);
+    const query: string = custom
+        ? `from=${ encodeURIComponent(new Date(from).toISOString()) }&to=${ encodeURIComponent(new Date(to).toISOString()) }`
+        : `hours=${ hours }`;
+
     const load: () => Promise<void> = useCallback(async (): Promise<void> => {
         setFailed(false);
+        setLoading(true);
         try {
             const response: HttpResponse<ActivityStatsInterface> = await httpClient({
                 headers: { Accept: "application/json" },
                 method: "GET",
-                url: `${ window[ "AppUtils" ]?.getConfig()?.serverOrigin }${ ACTIVITY_API_PATH }?hours=${ hours }`
+                url: `${ window[ "AppUtils" ]?.getConfig()?.serverOrigin }${ ACTIVITY_API_PATH }?${ query }`
             });
 
             setStats(response.data);
+            setUpdatedAt(new Date());
         } catch {
             setStats(null);
             setFailed(true);
+        } finally {
+            setLoading(false);
         }
-    }, [ hours ]);
+    }, [ query ]);
 
     useEffect(() => {
         void load();
     }, [ load ]);
 
-    const max: number = Math.max(1, ...(stats?.timeline ?? []).map((p: ActivityPointInterface) =>
-        p.loginSuccess + p.loginFailure));
     const attempts: number = (stats?.totals.loginSuccess ?? 0) + (stats?.totals.loginFailure ?? 0);
     const rate: string | undefined = stats === null ? undefined
         : attempts === 0 ? "—" : `${ Math.round((stats.totals.loginSuccess / attempts) * 1000) / 10 }%`;
@@ -238,17 +254,46 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
             data-componentid={ componentId }
         >
             <Box sx={ { display: "flex", flexDirection: "column", gap: 3 } }>
-                <Box sx={ { display: "flex", flexWrap: "wrap", gap: 1 } }>
+                <Box sx={ { alignItems: "center", display: "flex", flexWrap: "wrap", gap: 1 } }>
                     { RANGES.map((range: { hours: number; label: string }) => (
                         <Button
                             key={ range.hours }
-                            variant={ range.hours === hours ? "contained" : "outlined" }
-                            onClick={ () => setHours(range.hours) }
+                            variant={ !custom && range.hours === hours ? "contained" : "outlined" }
+                            onClick={ () => { setFrom(""); setTo(""); setHours(range.hours); } }
                             data-componentid={ `${ componentId }-range-${ range.hours }` }
                         >
                             { range.label }
                         </Button>
                     )) }
+                    <TextField
+                        size="small"
+                        type="datetime-local"
+                        label="Từ"
+                        value={ from }
+                        onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setFrom(e.target.value) }
+                        InputLabelProps={ { shrink: true } }
+                        data-componentid={ `${ componentId }-from` }
+                    />
+                    <TextField
+                        size="small"
+                        type="datetime-local"
+                        label="Đến"
+                        value={ to }
+                        onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setTo(e.target.value) }
+                        InputLabelProps={ { shrink: true } }
+                        data-componentid={ `${ componentId }-to` }
+                    />
+                    <Button
+                        variant="outlined"
+                        disabled={ loading }
+                        onClick={ () => void load() }
+                        data-componentid={ `${ componentId }-reload` }
+                    >
+                        { loading ? "Đang tải…" : "Tải lại" }
+                    </Button>
+                    { updatedAt && (
+                        <Typography variant="body2">Cập nhật lúc { updatedAt.toLocaleTimeString("vi-VN") }</Typography>
+                    ) }
                 </Box>
                 { failed && (
                     <Typography color="error">
@@ -271,20 +316,28 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                     <Card>
                         <CardContent>
                             <Typography variant="subtitle1">
-                                Đăng nhập theo thời gian (mỗi cột { stats.interval }; xanh: thành công, đỏ: thất bại)
+                                Đăng nhập theo thời gian (mỗi cột { stats.interval })
                             </Typography>
-                            <Box sx={ { alignItems: "flex-end", display: "flex", gap: "2px", height: 160, mt: 2 } }>
-                                { stats.timeline.map((p: ActivityPointInterface) => (
-                                    <Box
-                                        key={ p.time }
-                                        sx={ { display: "flex", flex: 1, flexDirection: "column", height: "100%", justifyContent: "flex-end" } }
-                                        title={ `${ new Date(p.time).toLocaleString("vi-VN") }: ${ p.loginSuccess } thành công, `
-                                            + `${ p.loginFailure } thất bại, ${ p.logout } đăng xuất` }
+                            <Box sx={ { height: 240, mt: 2 } }>
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart
+                                        data={ stats.timeline.map((p: ActivityPointInterface) => ({
+                                            ...p,
+                                            label: new Date(p.time).toLocaleString("vi-VN", {
+                                                day: "2-digit", hour: "2-digit", minute: "2-digit", month: "2-digit"
+                                            })
+                                        })) }
                                     >
-                                        <Box sx={ { bgcolor: "error.main", height: `${ (p.loginFailure / max) * 100 }%` } } />
-                                        <Box sx={ { bgcolor: "success.main", height: `${ (p.loginSuccess / max) * 100 }%` } } />
-                                    </Box>
-                                )) }
+                                        <CartesianGrid strokeDasharray="3 3" vertical={ false } />
+                                        <XAxis dataKey="label" minTickGap={ 24 } fontSize={ 12 } />
+                                        <YAxis allowDecimals={ false } fontSize={ 12 } />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="loginSuccess" name="Thành công" stackId="a" fill="#2e7d32" />
+                                        <Bar dataKey="loginFailure" name="Thất bại" stackId="a" fill="#d32f2f" />
+                                        <Bar dataKey="logout" name="Đăng xuất" fill="#78909c" />
+                                    </BarChart>
+                                </ResponsiveContainer>
                             </Box>
                         </CardContent>
                     </Card>
