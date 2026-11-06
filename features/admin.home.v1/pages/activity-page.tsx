@@ -20,6 +20,10 @@ import Box from "@oxygen-ui/react/Box";
 import Button from "@oxygen-ui/react/Button";
 import Card from "@oxygen-ui/react/Card";
 import CardContent from "@oxygen-ui/react/CardContent";
+import Dialog from "@oxygen-ui/react/Dialog";
+import DialogActions from "@oxygen-ui/react/DialogActions";
+import DialogContent from "@oxygen-ui/react/DialogContent";
+import DialogTitle from "@oxygen-ui/react/DialogTitle";
 import LinearProgress from "@oxygen-ui/react/LinearProgress";
 import TextField from "@oxygen-ui/react/TextField";
 import Table from "@oxygen-ui/react/Table";
@@ -79,6 +83,24 @@ const RANGES: { hours: number; label: string }[] = [
     { hours: 24, label: "24 giờ" },
     { hours: 168, label: "7 ngày" }
 ];
+
+const CalendarRangeIcon: FunctionComponent = (): ReactElement => (
+    <svg
+        aria-hidden="true"
+        fill="none"
+        height="18"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="18"
+    >
+        <rect height="17" rx="2" width="18" x="3" y="5" />
+        <path d="M16 3v4M8 3v4M3 10h18" />
+        <path d="m9 15 2 2 4-4" />
+    </svg>
+);
 
 const httpClient: HttpClientInstance = AsgardeoSPAClient.getInstance()
     .httpRequest.bind(AsgardeoSPAClient.getInstance());
@@ -205,12 +227,33 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
     const [ updatedAt, setUpdatedAt ] = useState<Date | null>(null);
     const [ stats, setStats ] = useState<ActivityStatsInterface | null>(null);
     const [ failed, setFailed ] = useState<boolean>(false);
+    const [ rangeOpen, setRangeOpen ] = useState<boolean>(false);
+    const [ draftFrom, setDraftFrom ] = useState<string>("");
+    const [ draftTo, setDraftTo ] = useState<string>("");
 
     // Khoảng tùy chọn chỉ có hiệu lực khi đủ cả hai đầu và đầu "Từ" trước đầu "Đến".
     const custom: boolean = from !== "" && to !== "" && new Date(from) < new Date(to);
     const query: string = custom
         ? `from=${ encodeURIComponent(new Date(from).toISOString()) }&to=${ encodeURIComponent(new Date(to).toISOString()) }`
         : `hours=${ hours }`;
+    const draftValid: boolean = draftFrom !== "" && draftTo !== "" && new Date(draftFrom) < new Date(draftTo);
+
+    const openRangeDialog: () => void = (): void => {
+        setDraftFrom(from);
+        setDraftTo(to);
+        setRangeOpen(true);
+    };
+
+    const closeRangeDialog: () => void = (): void => setRangeOpen(false);
+
+    const applyRange: () => void = (): void => {
+        if (!draftValid) {
+            return;
+        }
+        setFrom(draftFrom);
+        setTo(draftTo);
+        setRangeOpen(false);
+    };
 
     const load: () => Promise<void> = useCallback(async (): Promise<void> => {
         setFailed(false);
@@ -254,7 +297,7 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
             data-componentid={ componentId }
         >
             <Box sx={ { display: "flex", flexDirection: "column", gap: 3 } }>
-                <Box sx={ { alignItems: "center", display: "flex", flexWrap: "wrap", gap: 1 } }>
+                <Box sx={ { alignItems: "center", display: "flex", flexWrap: "wrap", gap: 1, justifyContent: "flex-end" } }>
                     { RANGES.map((range: { hours: number; label: string }) => (
                         <Button
                             key={ range.hours }
@@ -265,24 +308,14 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                             { range.label }
                         </Button>
                     )) }
-                    <TextField
-                        size="small"
-                        type="datetime-local"
-                        label="Từ"
-                        value={ from }
-                        onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setFrom(e.target.value) }
-                        InputLabelProps={ { shrink: true } }
-                        data-componentid={ `${ componentId }-from` }
-                    />
-                    <TextField
-                        size="small"
-                        type="datetime-local"
-                        label="Đến"
-                        value={ to }
-                        onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setTo(e.target.value) }
-                        InputLabelProps={ { shrink: true } }
-                        data-componentid={ `${ componentId }-to` }
-                    />
+                    <Button
+                        variant={ custom ? "contained" : "outlined" }
+                        startIcon={ <CalendarRangeIcon /> }
+                        onClick={ openRangeDialog }
+                        data-componentid={ `${ componentId }-custom-range-trigger` }
+                    >
+                        Khoảng tùy chọn
+                    </Button>
                     <Button
                         variant="outlined"
                         disabled={ loading }
@@ -300,6 +333,56 @@ const ActivityPage: FunctionComponent<IdentifiableComponentInterface> = (
                         Chưa xem được số liệu: hệ thống giám sát chưa kết nối hoặc bạn không có quyền quản trị.
                     </Typography>
                 ) }
+                <Dialog
+                    open={ rangeOpen }
+                    onClose={ closeRangeDialog }
+                    fullWidth
+                    maxWidth="xs"
+                    data-componentid={ `${ componentId }-custom-range-dialog` }
+                >
+                    <DialogTitle>Chọn khoảng thời gian</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            fullWidth
+                            size="small"
+                            type="datetime-local"
+                            label="Từ"
+                            value={ draftFrom }
+                            onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setDraftFrom(e.target.value) }
+                            InputLabelProps={ { shrink: true } }
+                            sx={ { mt: 1 } }
+                            data-componentid={ `${ componentId }-custom-range-from` }
+                        />
+                        <TextField
+                            fullWidth
+                            size="small"
+                            type="datetime-local"
+                            label="Đến"
+                            value={ draftTo }
+                            onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setDraftTo(e.target.value) }
+                            InputLabelProps={ { shrink: true } }
+                            sx={ { mt: 2 } }
+                            data-componentid={ `${ componentId }-custom-range-to` }
+                        />
+                        { !draftValid && (draftFrom !== "" || draftTo !== "") && (
+                            <Typography color="error" variant="body2" sx={ { mt: 1 } }>
+                                Cần chọn đủ cả hai mốc và mốc "Từ" phải trước mốc "Đến".
+                            </Typography>
+                        ) }
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={ closeRangeDialog }>Hủy</Button>
+                        <Button
+                            variant="contained"
+                            disabled={ !draftValid }
+                            onClick={ applyRange }
+                            data-componentid={ `${ componentId }-custom-range-apply` }
+                        >
+                            Áp dụng
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <Box sx={ { display: "grid", gap: 2, gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" } }>
                     { cards.map(([ title, count ]: [ string, number | string | undefined ]) => (
                         <Card key={ title }>

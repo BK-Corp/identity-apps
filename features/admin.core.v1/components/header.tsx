@@ -23,6 +23,7 @@ import Chip from "@oxygen-ui/react/Chip";
 import Flag from "@oxygen-ui/react/CountryFlag";
 import Divider from "@oxygen-ui/react/Divider";
 import OxygenHeader, { HeaderProps } from "@oxygen-ui/react/Header";
+import IconButton from "@oxygen-ui/react/IconButton";
 import Image from "@oxygen-ui/react/Image";
 import Link from "@oxygen-ui/react/Link";
 import ListItem from "@oxygen-ui/react/ListItem";
@@ -31,6 +32,7 @@ import ListItemText from "@oxygen-ui/react/ListItemText";
 import Menu from "@oxygen-ui/react/Menu";
 import MenuItem from "@oxygen-ui/react/MenuItem";
 import Skeleton from "@oxygen-ui/react/Skeleton";
+import Tooltip from "@oxygen-ui/react/Tooltip";
 import Typography from "@oxygen-ui/react/Typography";
 import {
     ChevronDownIcon,
@@ -334,30 +336,34 @@ const Header: FunctionComponent<HeaderPropsInterface> = ({
 
     const generateHeaderButtons = (): ReactElement[] => [
         supportUrl && (
-            <Button
-                component="a"
-                color="inherit"
-                href={ supportUrl }
-                target="_blank"
-                rel="noreferrer"
+            <Tooltip
                 key="support"
-                data-componentid="app-header-support-link"
+                title={ I18n.instance?.language?.startsWith("vi") ? "Hỗ trợ" : "Support" }
             >
-                { I18n.instance?.language?.startsWith("vi") ? "Hỗ trợ" : "Support" }
-            </Button>
+                <IconButton
+                    color="inherit"
+                    href={ supportUrl }
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={ I18n.instance?.language?.startsWith("vi") ? "Hỗ trợ" : "Support" }
+                    data-componentid="app-header-support-link"
+                >
+                    <TalkingHeadsetIcon />
+                </IconButton>
+            </Tooltip>
         ),
         showLanguageSwitcher && Object.entries(filteredSupportedI18nLanguages)?.length > 1 && (
-            <>
-                <Button
-                    color="inherit"
-                    startIcon={ <LanguageIcon /> }
-                    endIcon={ <ChevronDownIcon /> }
-                    key={ I18n.instance?.language }
-                    onClick={ handleLanguageSwitchTriggerClick }
-                    data-componentid="app-header-language-switcher-trigger"
-                >
-                    { filteredSupportedI18nLanguages[ I18n.instance?.language ]?.name }
-                </Button>
+            <React.Fragment key={ I18n.instance?.language }>
+                <Tooltip title={ filteredSupportedI18nLanguages[ I18n.instance?.language ]?.name }>
+                    <IconButton
+                        color="inherit"
+                        onClick={ handleLanguageSwitchTriggerClick }
+                        aria-label={ filteredSupportedI18nLanguages[ I18n.instance?.language ]?.name }
+                        data-componentid="app-header-language-switcher-trigger"
+                    >
+                        <LanguageIcon />
+                    </IconButton>
+                </Tooltip>
                 <Menu
                     open={ openLanguageSwitcher }
                     anchorEl={ languageSwitcherAnchorEl }
@@ -394,7 +400,7 @@ const Header: FunctionComponent<HeaderPropsInterface> = ({
                         }
                     ) }
                 </Menu>
-            </>
+            </React.Fragment>
         ),
         copilotToggle && (
             <Button
